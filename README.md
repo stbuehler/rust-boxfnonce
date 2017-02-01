@@ -1,5 +1,5 @@
 [![Travis Build Status](https://travis-ci.org/stbuehler/rust-boxfnonce.svg?branch=master)](https://travis-ci.org/stbuehler/rust-boxfnonce)
-[![crates.io](http://meritbadge.herokuapp.com/boxfnonce)](https://crates.io/crates/boxfnonce)
+[![crates.io](https://img.shields.io/crates/v/boxfnonce.svg)](https://crates.io/crates/boxfnonce)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
 This library provide a safe way to box FnOnce types.  It doesn't use any
