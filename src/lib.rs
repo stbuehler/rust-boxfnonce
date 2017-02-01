@@ -1,3 +1,7 @@
+#![warn(missing_docs)]
+
+//! See `BoxFnOnce` and `SendBoxFnOnce`.
+
 #[macro_use]
 mod macros;
 

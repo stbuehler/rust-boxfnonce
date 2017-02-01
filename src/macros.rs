@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 macro_rules! build_n_args {
 	( $name:ident [$($add:tt)*]: $($var:ident: $typevar:ident),* ) => (
 		impl< $($typevar,)* Result> $name<($($typevar,)*), Result> {

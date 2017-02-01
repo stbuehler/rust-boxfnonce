@@ -1,3 +1,5 @@
+#![warn(missing_docs)]
+
 /// `BoxFnOnce` boxes any `FnOnce` function up to a certain number of
 /// arguments (10 as of now).
 ///
