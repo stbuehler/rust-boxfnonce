@@ -1,4 +1,4 @@
-#![warn(missing_docs)]
+use traits::FnBox;
 
 /// `SendBoxFnOnce` boxes any `FnOnce + Send` function up to a certain
 /// number of arguments (10 as of now).
@@ -13,8 +13,8 @@
 /// return a value (i.e. the empty tuple) `Result` can be ommitted:
 /// `SendBoxFnOnce<(Args...,)>`.
 ///
-/// Internally it constructs a FnMut which keeps the FnOnce in an
-/// Option, and extracts the FnOnce on the first call.
+/// Internally it is implemented similar to `Box<FnBox()>`, but there is
+/// no `FnOnce` implementation for `SendBoxFnOnce`.
 ///
 /// You can build boxes for diverging functions too, but specifying the
 /// type (like `SendBoxFnOnce<(), !>`) is not possible as the `!` type is
@@ -38,25 +38,23 @@
 /// }).unwrap().join().unwrap();
 /// assert_eq!(result, "foo".to_string());
 /// ```
-pub struct SendBoxFnOnce<Args, Result = ()> {
-	/// theoretically we could call the inner FnMut multiple times,
-	/// but the public accessors make sure this won't happen.
-	func: Box<FnMut(Args) -> Result + Send>,
-}
+pub struct SendBoxFnOnce<Arguments, Result = ()> (Box<FnBox<Arguments, Result> + Send>);
 
 impl<Args, Result> SendBoxFnOnce<Args, Result> {
 	/// call inner function, consumes the box.
 	///
-	/// `call_tuple` can be used if the arguments are available as tuple.
-	/// Each usable instance of SendBoxFnOnce<(...), Result> has a separate
-	/// `call` method for passing arguments "untupled".
-	pub fn call_tuple(mut self, args: Args) -> Result {
-		(*self.func)(args)
+	/// `call_tuple` can be used if the arguments are available as
+	/// tuple. Each usable instance of SendBoxFnOnce<(...), Result> has
+	/// a separate `call` method for passing arguments "untupled".
+	#[inline]
+	pub fn call_tuple(self, args: Args) -> Result {
+		self.0.call(args)
 	}
 
 	/// `SendBoxFnOnce::new` is an alias for `SendBoxFnOnce::from`.
+	#[inline]
 	pub fn new<F>(func: F) -> Self
-		where Self: From<F>
+	where Self: From<F>
 	{
 		Self::from(func)
 	}
