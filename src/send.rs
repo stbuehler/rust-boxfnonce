@@ -201,7 +201,7 @@ mod test {
 				panic::resume_unwind(Box::new("inner diverging"));
 			}
 		});
-		let result = try_send("diverging test thread", || {
+		let result: Result<(), Box<&str>> = try_send("diverging test thread", || {
 			f.call(0, 0, 0, 0);
 		}).map_err(|e| e.downcast::<&str>().unwrap());
 		assert_eq!(result, Err(Box::new("inner diverging")));
