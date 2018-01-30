@@ -11,7 +11,7 @@ macro_rules! impl_trait_n_args {
 
 macro_rules! build_n_args {
 	( $name:ident [$($add:tt)*]: $($var:ident: $typevar:ident),* ) => (
-		impl< $($typevar,)* Result> $name<($($typevar,)*), Result> {
+		impl<'a, $($typevar,)* Result> $name<'a, ($($typevar,)*), Result> {
 			/// call inner function, consumes the box.
 			#[inline]
 			pub fn call(self $(, $var: $typevar)*) -> Result {
@@ -19,9 +19,9 @@ macro_rules! build_n_args {
 			}
 		}
 
-		impl< $($typevar,)* Result, F: 'static + FnOnce($($typevar),*) -> Result $($add)*> From<F> for $name<($($typevar,)*), Result> {
+		impl<'a,  $($typevar,)* Result, F: 'a + FnOnce($($typevar),*) -> Result $($add)*> From<F> for $name<'a, ($($typevar,)*), Result> {
 			fn from(func: F) -> Self {
-				$name(Box::new(func) as Box<FnBox<($($typevar,)*), Result> $($add)*>)
+				$name(Box::new(func) as Box<FnBox<($($typevar,)*), Result> $($add)* + 'a>)
 			}
 		}
 	)

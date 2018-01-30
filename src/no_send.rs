@@ -7,18 +7,18 @@ use traits::FnBox;
 /// available in stable rust, `BoxFnOnce` tries to provide a safe
 /// implementation.
 ///
-/// Instead of `Box<FnOnce(Args...) -> Result>` (or `Box<FnBox(Args...)
-/// -> Result>`) the box type is `BoxFnOnce<(Args...,), Result>`  (the
-/// arguments are always given as tuple type).  If the function doesn't
-/// return a value (i.e. the empty tuple) `Result` can be ommitted:
-/// `BoxFnOnce<(Args...,)>`.
+/// Instead of `Box<FnOnce(Args...) -> Result + 'a>` (or
+/// `Box<FnBox(Args...) -> Result> + 'a`) the box type is `BoxFnOnce<'a,
+/// (Args...,), Result>`  (the arguments are always given as tuple
+/// type).  If the function doesn't return a value (i.e. the empty
+/// tuple) `Result` can be omitted: `BoxFnOnce<'a, (Args...,)>`.
 ///
-/// Internally it is implemented similar to `Box<FnBox()>`, but there is
-/// no `FnOnce` implementation for `BoxFnOnce`.
+/// Internally it is implemented similar to `Box<FnBox()>`, but there
+/// is no `FnOnce` implementation for `BoxFnOnce`.
 ///
 /// You can build boxes for diverging functions too, but specifying the
-/// type (like `BoxFnOnce<(), !>`) is not possible as the `!` type is
-/// experimental.
+/// type (like `BoxFnOnce<'a, (), !>`) is not possible as the `!` type
+/// is experimental.
 ///
 /// If you need to send the FnOnce use `SendBoxFnOnce` instead.
 ///
@@ -47,9 +47,9 @@ use traits::FnBox;
 /// });
 /// assert_eq!(f.call(), "foo".to_string());
 /// ```
-pub struct BoxFnOnce<Arguments, Result = ()> (Box<FnBox<Arguments, Result>>);
+pub struct BoxFnOnce<'a, Arguments, Result = ()> (Box<FnBox<Arguments, Result> + 'a>);
 
-impl<Args, Result> BoxFnOnce<Args, Result> {
+impl<'a, Args, Result> BoxFnOnce<'a, Args, Result> {
 	/// call inner function, consumes the box.
 	///
 	/// `call_tuple` can be used if the arguments are available as
