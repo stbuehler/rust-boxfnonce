@@ -1,5 +1,6 @@
 [package]
 name = "boxfnonce"
+# also bump version in html_root_url in src/lib.rs
 version = "0.0.3"
 authors = ["Stefan Bühler <stbuehler@web.de>"]
 description = "safe FnOnce boxing for rust stable"
@@ -9,5 +10,9 @@ repository = "https://github.com/stbuehler/rust-boxfnonce"
 readme = "README.md"
 keywords = ["Box", "FnOnce"]
 license = "MIT"
+
+[badges]
+travis-ci = { repository = "stbuehler/rust-boxfnonce" }
+appveyor = { repository = "stbuehler/rust-boxfnonce" }
 
 [dependencies]
