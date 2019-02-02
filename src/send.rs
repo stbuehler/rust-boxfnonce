@@ -38,7 +38,7 @@ use traits::FnBox;
 /// }).unwrap().join().unwrap();
 /// assert_eq!(result, "foo".to_string());
 /// ```
-pub struct SendBoxFnOnce<'a, Arguments, Result = ()> (Box<FnBox<Arguments, Result> + Send + 'a>);
+pub struct SendBoxFnOnce<'a, Arguments, Result = ()> (pub(crate) Box<FnBox<Arguments, Result> + Send + 'a>);
 
 impl<'a, Args, Result> SendBoxFnOnce<'a, Args, Result> {
 	/// call inner function, consumes the box.
@@ -74,6 +74,7 @@ build_n_args!(SendBoxFnOnce[+Send]: a1: A1, a2: A2, a3: A3, a4: A4, a5: A5, a6: 
 
 #[cfg(test)]
 mod test {
+	use super::super::BoxFnOnce;
 	use super::SendBoxFnOnce;
 
 	use std::thread;
@@ -205,5 +206,17 @@ mod test {
 			f.call(0, 0, 0, 0);
 		}).map_err(|e| e.downcast::<&str>().unwrap());
 		assert_eq!(result, Err(Box::new("inner diverging")));
+	}
+
+	#[test]
+	fn test_arg4_void_to_nosend() {
+		let f = SendBoxFnOnce::from({
+			let s = closure_string();
+			|_, _, _, _| {
+				drop(s);
+			}
+		});
+		let f = BoxFnOnce::from(f);
+		f.call(0, 0, 0, 0);
 	}
 }

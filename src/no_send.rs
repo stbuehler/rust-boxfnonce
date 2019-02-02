@@ -81,6 +81,12 @@ build_n_args!(BoxFnOnce[]: a1: A1, a2: A2, a3: A3, a4: A4, a5: A5, a6: A6, a7: A
 build_n_args!(BoxFnOnce[]: a1: A1, a2: A2, a3: A3, a4: A4, a5: A5, a6: A6, a7: A7, a8: A8, a9: A9);
 build_n_args!(BoxFnOnce[]: a1: A1, a2: A2, a3: A3, a4: A4, a5: A5, a6: A6, a7: A7, a8: A8, a9: A9, a10: A10);
 
+impl<'a, Arguments, Result> From<super::SendBoxFnOnce<'a, Arguments, Result>> for BoxFnOnce<'a, Arguments, Result> {
+	fn from(value: super::SendBoxFnOnce<'a, Arguments, Result>) -> Self {
+		BoxFnOnce(value.0)
+	}
+}
+
 #[cfg(test)]
 mod test {
 	use super::BoxFnOnce;
