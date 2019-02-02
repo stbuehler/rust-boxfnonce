@@ -1,5 +1,5 @@
 #![warn(missing_docs)]
-#![doc(html_root_url = "https://docs.rs/boxfnonce/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/boxfnonce/0.1.1")]
 
 //! See `BoxFnOnce` and `SendBoxFnOnce`.
 
