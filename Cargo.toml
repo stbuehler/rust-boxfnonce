@@ -12,7 +12,6 @@ keywords = ["Box", "FnOnce"]
 license = "MIT"
 
 [badges]
-travis-ci = { repository = "stbuehler/rust-boxfnonce" }
 appveyor = { repository = "stbuehler/rust-boxfnonce" }
 
 [dependencies]
